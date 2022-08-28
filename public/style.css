@@ -1,0 +1,41 @@
+:root {
+    --primary-color: #15375a;
+    --secondary-color: #9ba2a8;
+    --tertiary-color: #dededc;
+  }
+
+  body {
+    background-color: var(--tertiary-color);
+  }
+
+  .content-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-around;
+  }
+
+  .title {
+    color: var(--primary-color);
+  }
+
+  .bell {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+    height: 50px;
+    width: 50px;
+    font-size: 1rem;
+    color: var(--tertiary-color);
+    background-color: var(--primary-color);
+    transition: 0.3s;
+  }
+
+  .bell:hover {
+    background-color: var(--secondary-color);
+  }
+
+  .modal-content {
+    background-color: var(--tertiary-color);
+  }

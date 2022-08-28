@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <!-- <link rel="stylesheet" href="/styles/index.css"> -->
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SMART INTERCOM</title>
+
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
+      crossorigin="anonymous"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.2/css/all.min.css"
+      integrity="sha512-1sCRPdkRXhBV2PBLUdRb4tMg1w2YPf37qatUFeS7zlBy7jJI8Lf4VHwWfZZfpXtYSLy85pkm9GaYVYMfw5BC1A=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <style>
+      :root {
+        --primary-color: #15375a;
+        --secondary-color: #9ba2a8;
+        --tertiary-color: #dededc;
+      }
+
+      body {
+        background-color: var(--tertiary-color);
+      }
+
+      .video-wrapper {
+        display: flex;
+        flex-direction: column;
+        padding: 10px;
+      }
+
+      .user-video,
+      .guest-video {
+        width: 100%;
+        height: 100%;
+      }
+
+      .controls {
+        position: absolute;
+        bottom: 40px;
+        width: 100%;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-around;
+      }
+
+      .button {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border-radius: 50%;
+        height: 50px;
+        width: 50px;
+        font-size: 1rem;
+        color: var(--tertiary-color);
+        border: 0;
+      }
+
+      .users {
+        position: absolute;
+        bottom: 150px;
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 10px;
+        margin: 10px;
+      }
+
+      .remote-video-container {
+        width: 100%;
+        border-radius: 10%;
+        overflow: hidden;
+        position: relative;
+      }
+
+      .remote-video {
+        width: 100%;
+        height: 100%;
+      }
+
+      .badge {
+        position: absolute;
+        top: 10px;
+        left: 10px;
+        background: rgba(0, 0, 0, 0.5);
+        padding: 5px;
+        color: white;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="chat-container" class="chat-container">
+      <div id="left" class="split bg-secondary" style="min-height: 300px">
+        <!-- <video autoplay id="guest-video" class="guest-video">
+          Your browser does not support the video tag.
+        </video> -->
+      </div>
+      <div id="right" class="split users">
+        <div class="remote-video-container" id="you">
+          <video autoplay id="user-video" class="user-video">
+            Your browser does not support the video tag.
+          </video>
+          <span class="badge">Anda</span>
+        </div>
+      </div>
+      <div class="controls">
+        <button class="button bg-secondary" id="toggle-cam"
+          ><i class="fas fa-fw fa-camera"></i
+        ></button>
+        <a
+          class="button bg-danger text-white text-decoration-none"
+          href="/finish.html"
+          ><i class="fas fa-fw fa-times"></i
+        ></a>
+      </div>
+    </div>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.2.0/socket.io.js"
+      integrity="sha512-WL6WGKMPBiM9PnHRYIn5YEtq0Z8XP4fkVb4qy7PP4vhmYQErJ/dySyXuFIMDf1eEYCXCrQrMJfkNwKc9gsjTjA=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
+    <script src="/room.js"></script>
+  </body>
+</html>
