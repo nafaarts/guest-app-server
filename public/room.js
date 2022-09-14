@@ -124,7 +124,7 @@ function handleReceiveIce({ candidate, from }) {
 }
 
 function handleDisconnect(userId) {
-  if (Object.keys(peers).length === 1) {
+  if (Object.keys(peers).length === 1 && isAdmin) {
     window.location.href = "/finish.html"
   }
   delete peers[userId]
