@@ -124,9 +124,9 @@ function handleReceiveIce({ candidate, from }) {
 }
 
 function handleDisconnect(userId) {
-  if (Object.keys(peers).length === 1 && isAdmin) {
-    window.location.href = "/finish.html"
-  }
+  // if (Object.keys(peers).length === 1 && isAdmin) {
+  //   window.location.href = "/finish.html"
+  // }
   delete peers[userId]
   document.getElementById(userId).remove()
 }
