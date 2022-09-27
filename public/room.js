@@ -35,6 +35,11 @@ function createPeer(userIdToCall, i) {
   const peer = new RTCPeerConnection({
     iceServers: [
       {
+        urls: "turn:13.250.13.83:3478?transport=udp",
+        username: "YzYNCouZM1mhqhmseWk6",
+        credential: "YzYNCouZM1mhqhmseWk6",
+      },
+      {
         urls: "stun:openrelay.metered.ca:80",
       },
       {
@@ -54,6 +59,7 @@ function createPeer(userIdToCall, i) {
       },
     ],
   })
+
   peer.onnegotiationneeded = () =>
     userIdToCall ? handleNegotiationNeededEvent(peer, userIdToCall) : null
   peer.onicecandidate = handleICECandidateEvent
