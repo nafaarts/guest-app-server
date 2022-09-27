@@ -194,8 +194,8 @@ async function init() {
 
     socket.on("client count", () => {
       let size = Object.keys(peers).length
-      alert(`room size : ${size}`)
-      if (size === 0) window.location.href = "/finish.html"
+      // alert(`room size : ${size}`)
+      // if (size === 0) window.location.href = "/finish.html"
     })
   })
 }
