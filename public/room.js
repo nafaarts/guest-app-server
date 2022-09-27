@@ -6,6 +6,7 @@ const guestId = window.location.pathname.split("/")[2]
 const userVideo = document.getElementById("user-video")
 let userStream
 let isAdmin = false
+let answered = false
 const socket = io("/")
 
 //get parameter from current url then store in variabel as array
@@ -25,6 +26,10 @@ function callOtherUsers(otherUsers, stream) {
 }
 
 function createPeer(userIdToCall, i) {
+  answered = true
+
+  // console.log("total user : ", Object.keys(peers).length)
+
   // const peer = new RTCPeerConnection({
   //   iceServers: [
   //     {
@@ -217,7 +222,7 @@ async function init() {
     socket.on("client count", () => {
       let size = Object.keys(peers).length
       // alert(`room size : ${size}`)
-      if (size === 0) window.location.href = "/finish.html"
+      if (size === 0 && answered) window.location.href = "/finish.html"
     })
   })
 }
