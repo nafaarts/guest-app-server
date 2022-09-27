@@ -25,11 +25,32 @@ function callOtherUsers(otherUsers, stream) {
 }
 
 function createPeer(userIdToCall, i) {
-  console.log("peer:", i)
+  // const peer = new RTCPeerConnection({
+  //   iceServers: [
+  //     {
+  //       urls: "stun:stun.stunprotocol.org",
+  //     },
+  //   ],
+  // })
   const peer = new RTCPeerConnection({
     iceServers: [
       {
-        urls: "stun:stun.stunprotocol.org",
+        urls: "stun:openrelay.metered.ca:80",
+      },
+      {
+        urls: "turn:openrelay.metered.ca:80",
+        username: "openrelayproject",
+        credential: "openrelayproject",
+      },
+      {
+        urls: "turn:openrelay.metered.ca:443",
+        username: "openrelayproject",
+        credential: "openrelayproject",
+      },
+      {
+        urls: "turn:openrelay.metered.ca:443?transport=tcp",
+        username: "openrelayproject",
+        credential: "openrelayproject",
       },
     ],
   })
