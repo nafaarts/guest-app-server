@@ -10,8 +10,6 @@ const socket = io("/")
 
 //get parameter from current url then store in variabel as array
 function callOtherUsers(otherUsers, stream) {
-  console.log("jumlah :", otherUsers.length)
-  console.log("Other Users :", otherUsers)
   if (!otherUsers.length) {
     isAdmin = true
   }
@@ -124,9 +122,6 @@ function handleReceiveIce({ candidate, from }) {
 }
 
 function handleDisconnect(userId) {
-  // if (Object.keys(peers).length === 1 && isAdmin) {
-  //   window.location.href = "/finish.html"
-  // }
   delete peers[userId]
   document.getElementById(userId).remove()
 }
@@ -196,6 +191,12 @@ async function init() {
     socket.on("show cam", showCam)
 
     socket.on("server is full", () => alert("chat is full"))
+
+    socket.on("client count", () => {
+      let size = Object.keys(peers).length
+      alert(`room size : ${size}`)
+      if (size === 0) window.location.href = "/finish.html"
+    })
   })
 }
 
