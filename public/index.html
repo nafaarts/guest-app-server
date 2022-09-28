@@ -44,14 +44,17 @@
     ></script>
     <script>
       function createGuest() {
+        let id = uuid.v4()
         localStorage.setItem(
           "guest",
           JSON.stringify({
-            id: uuid.v4(),
+            id: id,
             click: 0,
             expired: new Date().getTime(),
           }),
         )
+
+        return id
       }
 
       const button = document.querySelector("#bell")
@@ -59,14 +62,16 @@
         // check if localStorage 'guest' is empty and check if expired has more than 1 minutes. create a new one, then redirect to the waiting.html
         let resetTime = 60000 * 3 // 3 minutes
         if (localStorage.getItem("guest") === null) {
-          createGuest()
-          window.location.href = "waiting.html"
+          let id = createGuest()
+          // window.location.href = "waiting.html"
+          window.location.href = "/room/" + id + "?type=guest"
         } else {
           const guest = JSON.parse(localStorage.getItem("guest"))
           if (new Date().getTime() - guest.expired > resetTime) {
             createGuest()
           }
-          window.location.href = "waiting.html"
+          // window.location.href = "waiting.html"
+          window.location.href = "/room/" + guest.id + "?type=guest"
         }
       })
     </script>

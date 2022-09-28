@@ -4,17 +4,24 @@ const remoteVideoContainer = document.getElementById("right")
 const toggleButton = document.getElementById("toggle-cam")
 const guestId = window.location.pathname.split("/")[2]
 const userVideo = document.getElementById("user-video")
+const waiting = document.getElementById("waiting")
+const detik = document.querySelector("#detik")
+let interval
+
+const urlParams = new URLSearchParams(window.location.search)
+const type = urlParams.get("type")
+
 let userStream
-let isAdmin = false
-let answered = false
+let isGuest = false
 const socket = io("/")
 
 //get parameter from current url then store in variabel as array
 function callOtherUsers(otherUsers, stream) {
   if (!otherUsers.length) {
-    isAdmin = true
+    isGuest = true
   }
-  console.log("isAdmin :", isAdmin)
+
+  console.log("isGuest :", isGuest)
   otherUsers.forEach((userIdToCall, i) => {
     console.log("index:", i)
     const peer = createPeer(userIdToCall, i)
@@ -26,17 +33,8 @@ function callOtherUsers(otherUsers, stream) {
 }
 
 function createPeer(userIdToCall, i) {
-  answered = true
+  console.log("Peers: ", Object.keys(peers).length)
 
-  // console.log("total user : ", Object.keys(peers).length)
-
-  // const peer = new RTCPeerConnection({
-  //   iceServers: [
-  //     {
-  //       urls: "stun:stun.stunprotocol.org",
-  //     },
-  //   ],
-  // })
   const peer = new RTCPeerConnection({
     iceServers: [
       {
@@ -66,7 +64,7 @@ function createPeer(userIdToCall, i) {
 
   peer.ontrack = (e) => {
     if (e.track.kind === "video") {
-      if (i === 0 || isAdmin) {
+      if (i === 0 || isGuest) {
         // goes to guest!
         const container = document.createElement("div")
         const video = document.createElement("video")
@@ -209,6 +207,8 @@ async function init() {
 
     socket.on("connection answer", handleAnswer)
 
+    socket.on("answered", clearWaiting)
+
     socket.on("ice-candidate", handleReceiveIce)
 
     socket.on("user disconnected", (userId) => handleDisconnect(userId))
@@ -221,10 +221,74 @@ async function init() {
 
     socket.on("client count", () => {
       let size = Object.keys(peers).length
-      // alert(`room size : ${size}`)
-      if (size === 0 && answered) window.location.href = "/finish.html"
+      if (size === 0) window.location.href = "/finish.html"
     })
   })
 }
 
 init()
+
+function sendNotification(message, guestId = null, status = null) {
+  fetch("/send-notification", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      title: "Ada Tamu!",
+      body: message,
+      data: {
+        guestId,
+        status,
+      },
+    }),
+  })
+    .then((res) => res.json())
+    .then((data) => {
+      console.log(data)
+    })
+    .catch((err) => {
+      console.log(err)
+    })
+}
+
+if (type === "guest") {
+  console.log("waiting...")
+
+  var guest = localStorage.getItem("guest")
+  let data = JSON.parse(guest)
+
+  if (data.click < 3) {
+    // update click in data then update local storage
+    data.click += 1
+    data.expired = new Date().getTime()
+    localStorage.setItem("guest", JSON.stringify(data))
+    let message = ""
+    if (data.click > 1) {
+      message = `tamu telah menekan tombol ${data.click} kali`
+    } else {
+      message = "ada tamu berkunjung ke rumah anda"
+    }
+    sendNotification(message, guestId, "waiting")
+  } else {
+    localStorage.removeItem("guest")
+    sendNotification("tamu telah di reject", guestId, "reject")
+    window.location.href = "/rejected.html"
+  }
+
+  let count = 30
+  interval = setInterval(() => {
+    if (count > 0) {
+      detik.innerText = count
+      count--
+    } else {
+      alert("Tidak ada response dari pemilik rumah")
+      window.location.href = "/"
+    }
+  }, 1000)
+} else {
+  waiting.classList.add("d-none")
+}
+
+function clearWaiting() {
+  clearInterval(interval)
+  waiting.classList.add("d-none")
+}

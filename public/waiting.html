@@ -50,29 +50,29 @@
     ></script>
 
     <script>
-      function sendNotification(message, guestId = null, status = null) {
-        fetch("/send-notification", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            title: "Ada Tamu!",
-            body: message,
-            data: {
-              guestId,
-              status,
-            },
-          }),
-        })
-          .then((res) => res.json())
-          .then((data) => {
-            console.log(data)
-          })
-          .catch((err) => {
-            console.log(err)
-          })
-      }
+      // function sendNotification(message, guestId = null, status = null) {
+      //   fetch("/send-notification", {
+      //     method: "POST",
+      //     headers: {
+      //       "Content-Type": "application/json",
+      //     },
+      //     body: JSON.stringify({
+      //       title: "Ada Tamu!",
+      //       body: message,
+      //       data: {
+      //         guestId,
+      //         status,
+      //       },
+      //     }),
+      //   })
+      //     .then((res) => res.json())
+      //     .then((data) => {
+      //       console.log(data)
+      //     })
+      //     .catch((err) => {
+      //       console.log(err)
+      //     })
+      // }
 
       // get local storage of guest
       var guest = localStorage.getItem("guest")
@@ -90,20 +90,21 @@
         } else {
           message = "ada tamu berkunjung ke rumah anda"
         }
-        sendNotification(message, guestId, "waiting")
+        // sendNotification(message, guestId, "waiting")
         const socket = io("/")
+
+        console.log(guestId)
+
         async function init() {
           socket.on("connect", async () => {
             socket.emit("user joined room", { guestId })
 
-            socket.on("all other users", (otherUsers) => {
-              if (otherUsers.length > 0) {
-                window.location.href = `/room/${guestId}`
-              }
-            })
-
-            socket.on("connection offer", () => {
-              sendNotification("tamu telah diterima", guestId, "accepted")
+            socket.on("answered", ({ userIdToCall, sdp }) => {
+              // sendNotification(
+              //   "tamu telah diterima",
+              //   guestId,
+              //   "accepted",
+              // )
               window.location.href = `/room/${guestId}`
             })
           })
@@ -112,7 +113,7 @@
       } else {
         // if click is more than 4 then redirect to home
         localStorage.removeItem("guest")
-        sendNotification("tamu telah di reject", guestId, "reject")
+        // sendNotification("tamu telah di reject", guestId, "reject")
         window.location.href = "/rejected.html"
       }
 

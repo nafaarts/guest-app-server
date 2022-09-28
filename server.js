@@ -104,6 +104,7 @@ app.post("/send-notification", jsonParser, (req, res) => {
   })
 })
 
+// socket io
 io.on("connection", (socket) => {
   socket.on("user joined room", ({ guestId }) => {
     console.warn(`User joined room ${guestId}`)
@@ -121,15 +122,16 @@ io.on("connection", (socket) => {
       room.forEach((id) => {
         otherUsers.push(id)
       })
-      console.info("otherUsers", otherUsers)
     }
 
     socket.join(guestId)
+    console.info("otherUsers", otherUsers)
     socket.emit("all other users", otherUsers)
   })
 
   socket.on("peer connection request", ({ userIdToCall, sdp }) => {
     io.to(userIdToCall).emit("connection offer", { sdp, callerId: socket.id })
+    io.to(userIdToCall).emit("answered", { userIdToCall, sdp })
   })
 
   socket.on("connection answer", ({ userToAnswerTo, sdp }) => {
